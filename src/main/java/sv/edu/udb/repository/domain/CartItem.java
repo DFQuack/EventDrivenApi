@@ -3,8 +3,6 @@ package sv.edu.udb.repository.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
-
 @Entity
 @Getter
 @Setter
@@ -16,15 +14,15 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Por simplicidad, no se establece relación con una entidad Item
+    @Column(nullable = false)
+    private Long itemId;
+
     @Column(nullable = false)
     private int quantity;
 
     @Column(nullable = false)
     private Double totalPrice;
-
-    // Por simplicidad, no se establece relación con una entidad Item
-    @Column(nullable = false)
-    private Long itemId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
