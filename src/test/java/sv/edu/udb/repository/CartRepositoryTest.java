@@ -23,13 +23,13 @@ public class CartRepositoryTest {
         final Long itemId = 1L;
         final int quantity = 1;
         final Double totalPrice = 30.00;
-        CartItem newItem = CartItem.builder()
+        final CartItem newItem = CartItem.builder()
                 .itemId(itemId)
                 .quantity(quantity)
                 .totalPrice(totalPrice)
                 .build();
 
-        Cart newCart = Cart.builder()
+        final Cart newCart = Cart.builder()
                 .cartItems(List.of(newItem))
                 .build();
 
@@ -64,5 +64,57 @@ public class CartRepositoryTest {
         assertEquals(expectedItemId, actualCart.getCartItems().get(0).getItemId());
         assertEquals(expectedQuantity, actualCart.getCartItems().get(0).getQuantity());
         assertEquals(expectedTotalPrice, actualCart.getCartItems().get(0).getTotalPrice());
+    }
+
+    @Test
+    void savesCart() {
+        final Long itemId = 2L;
+        final int quantity = 3;
+        final Double totalPrice = 45.00;
+        final CartItem secondItem = CartItem.builder()
+                .itemId(itemId)
+                .quantity(quantity)
+                .totalPrice(totalPrice)
+                .build();
+
+        final Cart secondCart = Cart.builder()
+                .cartItems(List.of(secondItem))
+                .build();
+        secondItem.setCart(secondCart);
+        cartRepo.save(secondCart);
+
+        final Long expectedId = 2L;
+        final Cart actualCart = cartRepo.findById(expectedId).orElse(null);
+
+        assertNotNull(actualCart);
+        assertEquals(expectedId, actualCart.getId());
+        assertEquals(quantity, actualCart.getCartItems().get(0).getQuantity());
+        assertEquals(totalPrice, actualCart.getCartItems().get(0).getTotalPrice());
+    }
+
+    @Test
+    void deletesCart() {
+        final Long itemId = 2L;
+        final int quantity = 3;
+        final Double totalPrice = 45.00;
+        final CartItem thirdItem = CartItem.builder()
+                .itemId(itemId)
+                .quantity(quantity)
+                .totalPrice(totalPrice)
+                .build();
+
+        final Cart thirdCart = Cart.builder()
+                .cartItems(List.of(thirdItem))
+                .build();
+        thirdItem.setCart(thirdCart);
+        cartRepo.saveAndFlush(thirdCart);
+
+        final Long expectedId = thirdCart.getId();
+        final Cart actualCart = cartRepo.findById(expectedId).orElse(null);
+        assertNotNull(actualCart);
+
+        cartRepo.deleteById(expectedId);
+        final Cart deletedCart = cartRepo.findById(expectedId).orElse(null);
+        assertNull(deletedCart);
     }
 }
