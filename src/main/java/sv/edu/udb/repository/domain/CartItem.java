@@ -11,20 +11,22 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Item {
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String category;
+    private int quantity;
 
     @Column(nullable = false)
-    private Double price;
+    private Double totalPrice;
 
-    @Column
-    private String description;
+    // Por simplicidad, no se establece relación con una entidad Item
+    @Column(nullable = false)
+    private Long itemId;
 
-    @ManyToMany(mappedBy = "items")
-    private Set<Cart> carts;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 }
