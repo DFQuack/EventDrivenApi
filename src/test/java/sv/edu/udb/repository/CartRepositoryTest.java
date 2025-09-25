@@ -15,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CartRepositoryTest {
     @Autowired
     private CartRepository cartRepo;
-    @Autowired
-    private CartItemRepository itemRepo;
 
     @BeforeEach
     void init() {

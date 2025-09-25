@@ -8,6 +8,6 @@ public interface CartService {
     CartResponse findById(final Long id);
     CartResponse save(final CartRequest cartRequest);
     CartResponse addItem(final Long id, final CartItemRequest itemRequest);
-    CartResponse removeItem(final Long id, final CartItemRequest itemRequest);
+    CartResponse removeItem(Long cartId, Long itemId);
     void delete(final Long id);
 }

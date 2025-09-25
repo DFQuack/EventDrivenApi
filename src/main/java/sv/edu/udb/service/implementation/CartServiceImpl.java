@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import sv.edu.udb.controller.request.CartItemRequest;
 import sv.edu.udb.controller.request.CartRequest;
 import sv.edu.udb.controller.response.CartResponse;
+import sv.edu.udb.repository.CartItemRepository;
 import sv.edu.udb.repository.CartRepository;
 import sv.edu.udb.repository.domain.Cart;
 import sv.edu.udb.repository.domain.CartItem;
@@ -26,6 +27,8 @@ public class CartServiceImpl implements CartService {
     private final CartMapper cartMapper;
     @NonNull
     private final CartItemMapper itemMapper;
+    @NonNull
+    private final CartItemRepository itemRepo;
 
     @Override
     public CartResponse findById(Long id) {
@@ -52,8 +55,16 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartResponse removeItem(Long id, CartItemRequest itemRequest) {
-        return null;
+    public CartResponse removeItem(Long cartId, Long itemId) {
+        Cart cart = cartRepo.findById(cartId).orElseThrow(() -> new EntityNotFoundException("Cart not found; id: " + cartId));
+        List<CartItem> cartItems = new ArrayList<>(cart.getCartItems());
+        CartItem itemToDelete = itemRepo.findById(itemId).orElseThrow(() -> new EntityNotFoundException("Item not found; id: " + itemId));
+
+        cartItems.remove(itemToDelete);
+        cart.setCartItems(cartItems);
+        itemToDelete.setCart(null);
+
+        return cartMapper.toCartResponse(cartRepo.save(cart));
     }
 
     @Override
