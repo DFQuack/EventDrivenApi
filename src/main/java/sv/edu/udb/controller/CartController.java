@@ -41,7 +41,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}/remove/{itemId}")
+    @DeleteMapping("/{id}/{itemId}")
     public ResponseEntity<CartResponse> removeItem(@PathVariable Long id, @PathVariable Long itemId) {
         CartResponse response = cartService.removeItem(id, itemId);
         eventProducer.sendEvent("REMOVED_ITEM", response);
