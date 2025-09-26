@@ -10,16 +10,16 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
-    private final MessageConverter messageConverter;
+    private final MessageConverter customMessageConverter;
 
-    public RabbitMQConfig(MessageConverter messageConverter) {
-        this.messageConverter = messageConverter;
+    public RabbitMQConfig(MessageConverter customMessageConverter) {
+        this.customMessageConverter = customMessageConverter;
     }
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(messageConverter);
+        rabbitTemplate.setMessageConverter(customMessageConverter);
         return rabbitTemplate;
     }
 }
